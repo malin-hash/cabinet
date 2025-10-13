@@ -4,7 +4,7 @@ import { Link } from 'react-scroll'
 
 export default function Price() {
   return (
-    <div className='h-screen md:px-20 px-16 py-5 bg-slate-100'>
+    <div className=' md:px-20 px-10 py-5 bg-slate-100'>
       <h1 className='text-center text-gray-700 md:mb-4 mb-2 font-bold md:text-2xl text-xl'>Nos Tarifs Transparents</h1>
       <p className='text-gray-500 text-center mb-8 md:text-md text-sm'>Des frais clairs et transparents adaptés à vos besoins et à la complexité de votre dossier</p>
         <div className='grid md:grid-cols-3 grid-cols-1 text-gray-700 gap-4 mb-10'>

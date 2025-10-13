@@ -18,10 +18,10 @@ export default function ExpertEquipe() {
     }, []);
     
     const equipes = [
-        {id: 1, name: "Maitre PABINGUI Ruffin", funtion: "Associé Fondateur", speciality: "Droit des affaire & Droit Commercial", experience: "25+ ans d'expérience", content: "Diplomé de l'école de droit de Gabon. Spécialisé en droit des affaire internationnales", avatar: "../../../../public/a4.jpg"},
-        {id: 2, name: "Maitre IGARA", funtion: "Associé Seigneur", speciality: "Droit Pénal  & Droit de la famille", experience: "6 ans d'expérience", content: "Expert en droit pénal avec une formation approfondie en criminologie et droit familial", avatar: "../../../../public/a3.jpg"},
-        {id: 3, name: "Maitre Mohera", funtion: "Associé Seigneur", speciality: "Droit Immobilier & droit du travail", experience: "5 ans d'expérience", content: "Spécialiste reconnu en transactions immobilières complexes et droit social", avatar: "../../../../public/a2.jpg"},
-        {id: 4, name: "Maitre Andy", funtion: "Associé Seigneur", speciality: "Droit des affaire & Droit Commercial", experience: "25 ans d'expérience", content: "Diplomé de l'école de droit de Gabon. Spécialisé en droit des affaire internationnales", avatar: "../../../../public/a1.jpg"},
+        {id: 1, name: "Maitre PABINGUI Ruffin", funtion: "Associé Fondateur", speciality: "Droit des affaire & Droit Commercial", experience: "25+ ans d'expérience", content: "Diplomé de l'école de droit de Gabon. Spécialisé en droit des affaire internationnales", avatar: "/a4.jpg"},
+        {id: 2, name: "Maitre IGARA", funtion: "Associé Seigneur", speciality: "Droit Pénal  & Droit de la famille", experience: "6 ans d'expérience", content: "Expert en droit pénal avec une formation approfondie en criminologie et droit familial", avatar: "/a3.jpg"},
+        {id: 3, name: "Maitre Mohera", funtion: "Associé Seigneur", speciality: "Droit Immobilier & droit du travail", experience: "5 ans d'expérience", content: "Spécialiste reconnu en transactions immobilières complexes et droit social", avatar: "/a2.jpg"},
+        {id: 4, name: "Maitre Andy", funtion: "Associé Seigneur", speciality: "Droit des affaire & Droit Commercial", experience: "25 ans d'expérience", content: "Diplomé de l'école de droit de Gabon. Spécialisé en droit des affaire internationnales", avatar: "/a1.jpg"},
     ]    
   return (
     <div className=' bg-white md:px-24 px-14'>

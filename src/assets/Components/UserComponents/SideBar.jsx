@@ -15,9 +15,6 @@ export default function Sidebar({ onClose, open }){
         {/* <p className='p-2 font-bold text-lg'>Menu</p> */}
         <div>
         <div>
-          <BsMenuApp/>
-          <h1 className='text-sm font-mono px-3 font-bold mb-2'>Menu</h1>
-        <hr />
         </div>
           <nav className="flex flex-col px-12">
             <Link onClick={onClose} smooth={true} duration={600} spy={true} offset={-80} activeClass='bg-blue-600 text-center text-lg' to="acceuil" className='mb-0  block p-3 hover:bg-blue-600 rounded-lg  cursor-pointer transition-all duration-500 font-semibold'>Acceuil</Link>

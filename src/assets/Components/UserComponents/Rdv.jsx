@@ -49,12 +49,12 @@ export default function Rdv() {
                             </select>
                         </div>
                     </div>
-                    <div className='grid md:grid-cols-2 grid-cols-1 gap-2'>
-                        <div>
+                    <div className='grid md:grid-cols-2 grid-cols-1 gap-2 w-full'>
+                        <div className='w-full'>
                             <label className='text-sm text-gray-500' htmlFor="">Date souhaitée <span className='text-red-600'>*</span></label>
                             <input type="date"  className='w-full p-2 border-2 border-black rounded-lg' placeholder='Exemple: malin@gmail.com'/>
                         </div>
-                        <div>
+                        <div className='w-full'>
                             <label className='text-sm text-gray-500' htmlFor="">Heure souhaitée <span className='text-red-600'>*</span></label>
                             <input type="time"  className='w-full p-2 border-2 border-black rounded-lg' placeholder='Exemple: 74427249'/>
                         </div>
