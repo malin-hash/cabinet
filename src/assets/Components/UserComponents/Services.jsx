@@ -6,11 +6,11 @@ export default function Services() {
   const close = () => setOpen(!open)
   const button = open ? "Voir moins" : "Voir plus"
   return (
-    <div className=' bg-slate-50 md:py-10 py-5 md:px-24 px-10'>
+    <div className=' bg-slate-50 lg:py-10 py-5 md:px-24 px-10'>
       <h1 className='text-center text-gray-700 md:mb-4 mb-2 font-bold md:text-3xl text-xl'>Nos Domaines d'Expertises</h1>
       <p className='text-gray-500 text-center md:text-md text-sm'>Une Equipe d'avocats spécialisés pour répondre à tous vos besoins juridiques avec</p>
       <p className='text-gray-500 text-center md:mb-12 mb-3 md:text-md text-sm'>professionnalisme et éficacité</p>
-      <div className='grid md:grid-cols-3 grid-cols-1 text-gray-700 gap-4 mb-4'>
+      <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 text-gray-700 gap-4 mb-4'>
         <div className='p-6 bg-white shadow-xl rounded-lg'>
             <FaBalanceScale className='text-4xl text-blue-700 p-2 rounded-full bg-blue-200 mb-3'/>
             <h1 className='text-lg font-semibold mb-3'>Droit des Affaires</h1>
@@ -77,7 +77,7 @@ export default function Services() {
       </div>
        {
           open && (
-            <div className='space-y-3 grid md:grid-cols-3 grid-cols-1 gap-4 mb-4'>
+            <div className='space-y-3 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mb-4'>
             <div className='p-6 bg-white shadow-xl rounded-md'>
             <FaGavel className='text-4xl text-blue-700 p-2 rounded-full bg-blue-200 mb-3'/>
             <h1 className='text-lg font-semibold mb-3'>Droit Pénal</h1>
