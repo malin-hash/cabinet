@@ -4,7 +4,7 @@ import {FaLocationPin } from 'react-icons/fa6'
 
 export default function Footer() {
   return (
-    <div className='bg-black p-10 text-white'>
+    <div className='bg-black p-10 text-white '>
         <div className='grid md:grid-cols-4 grid-cols-2 gap-5 mb-5'>
             <div className='space-y-4'>
                 <p>Logo</p>

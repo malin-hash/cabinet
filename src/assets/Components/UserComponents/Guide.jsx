@@ -63,7 +63,7 @@ return (
     <p className="text-center md:tet-md text-sm text-gray-500">Un processus clair et transparent pour vous accompagner de la première consultation à la résolution de votre affaire</p>
 
 {/* Grille pour grand écran */}
-<div className="hidden md:grid grid-cols-5 md:p-12 gap-2 relative z-10 -mt-5">
+<div className="hidden lg:grid grid-cols-5 md:p-12 gap-2 relative z-10 -mt-5">
     {movies.map((movie) => (
         <div
             key={movie.id}
@@ -99,7 +99,7 @@ return (
 </div>
 
 {/* Carrousel horizontal pour mobile */}
-<div className="relative block md:hidden px-10 mt-2 mb-5 ">
+<div className="relative block lg:hidden px-10 mt-2 mb-5 ">
     <div
         ref={carouselRef}
         className="flex overflow-x-scroll scrollbar-hide snap-x snap-mandatory scroll-smooth"

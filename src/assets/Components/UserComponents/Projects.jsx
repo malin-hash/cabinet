@@ -11,7 +11,7 @@ export default function Projects() {
     <div className='md:px-24 px-8 bg-slate-100  py-5'>
       <h1 className='text-center text-gray-700 mb-4 font-bold md:text-2xl text-xl'>Nos Succès Récents</h1>
       <p className='text-gray-500 text-center mb-8 md:text-md text-xs'>Découvrez quelques-unes de nos affaires les plus marquantes et les résultats obtenus pour nos clients</p>
-      <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 md:gap-16 gap-3 mb-6'>
+      <div className='grid lg:grid-cols-3 grid-cols-1 md:gap-16 gap-2 mb-6'>
         {
             equipes.map((equipe) => (
                 <div key={equipe.id} className='bg-white p-2 shadow-md rounded-md '>

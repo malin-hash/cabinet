@@ -2,22 +2,32 @@ import React, {useState} from 'react'
 import { Link } from 'react-scroll'
 import { AiOutlineMenu } from 'react-icons/ai'
 import Sidebar from './SideBar';
+import ModalConnexion from './ModalConnexion';
 
 export default function Header() {
     const [open, setOpen] = useState(false);
+    const [openModal, setOpenModal] = useState(false)
+    const close = () => {
+        setOpenModal(!openModal)
+        setOpen(false)
+    }
   return (
-    <div className='fixed top-0 left-0 right-0 bg-white shadow-md z-30 px-4 text-sm'>
-        <Sidebar open={open} onClose={() => setOpen(false)}/>
+    <div className='fixed top-0 left-0 right-0 bg-white shadow-md z-30 md:px-4 px-1 text-sm'>
+        <Sidebar open={open} onClose={() => setOpen(false)} close={close} openModal={openModal}/>
         <nav className='flex justify-between'>
             {/* Logo */}
-            <div className='p-2'>
-               <p className='py-1 text-blue-600 font-mono text-lg'>PABINGUI & Associés</p>
-            </div>
-            <button onClick={() => setOpen(true)} className='md:hidden block text-gray-800 p-3 font-bold cursor-pointer hover:text-blue-600'>
+        <div className='p-2 flex items-center'>
+          <img src="/justice.png" alt="" className='md:h-14 md:w-28 sm:h-10 sm:w-20'/>
+          <div>
+             <p className='text-blue-600 text-sm font-mono'>PABINGUI <span className='text-yellow-600'>&</span> Associés</p>
+             <p className='text-blue-600 text-xs font-thin text-center -mt-1'>Justise - Défense - Droit</p>
+          </div>
+        </div>
+            <button onClick={() => setOpen(true)} className='lg:hidden block text-gray-800 p-3 font-bold cursor-pointer hover:text-blue-600'>
                 <AiOutlineMenu size={20}/>
             </button>
-            <div className='md:block hidden'>
-            <div className='flex justify-center gap-8 py-2'>
+            <div className='lg:block hidden'>
+            <div className='flex justify-center gap-8 py-2 items-center'>
                 <Link
                 to="acceuil"
                 smooth={true}
@@ -86,7 +96,7 @@ export default function Header() {
                 </Link>
                 
                 <Link
-                to="contact"
+                to="rdv"
                 smooth={true}
                 duration={500}
                 spy={true}
@@ -94,10 +104,10 @@ export default function Header() {
                 activeClass="border-b-2 border-blue-600 text-blue-600"
                 className="p-2 cursor-pointer font-semibold text-gray-700 transition-colors hover:text-blue-600 border-b-2 hover:border-blue-600 duration-300"
                 >
-                    Contact
+                    Prendre RDV
                 </Link>
                 <Link
-                to="rdv"
+                onClick={close}
                 smooth={true}
                 duration={500}
                 spy={true}
@@ -105,11 +115,16 @@ export default function Header() {
                 activeClass="text-blue-600 border-b-2 border-blue-600"
                 className="p-2 cursor-pointer font-semibold text-white hover:bg-blue-500 transition-colors bg-blue-600 rounded-lg"
                 >
-                    Prendre rendez-vous
+                    Se connecter
                 </Link> 
             </div>
             </div>
         </nav>
+        {
+             openModal && (
+                 <ModalConnexion close={close}/>
+             )
+         }
     </div>
   )
 }

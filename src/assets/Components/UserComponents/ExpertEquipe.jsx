@@ -24,11 +24,11 @@ export default function ExpertEquipe() {
         {id: 4, name: "Maitre Andy", funtion: "Associé Seigneur", speciality: "Droit des affaire & Droit Commercial", experience: "25 ans d'expérience", content: "Diplomé de l'école de droit de Gabon. Spécialisé en droit des affaire internationnales", avatar: "/a1.jpg"},
     ]    
   return (
-    <div className=' bg-white lg:px-24 md:px-16 px-8'>
+    <div className=' bg-white lg:px-16 md:px-12 px-8'>
       <h1 className='text-center text-gray-700 mb-2 font-bold md:text-2xl text-xl'>Notre Equipe d'Experts</h1>
       <p className='text-gray-500 text-center mb-4 md:text-md text-sm'>Des avocats expérimentés et reconnus dans leurs domaines de spécialisations</p>
       {/* Grand ecran */}
-        <div className='hidden lg:grid lg:grid-cols-4 md:grid md:grid-cols-3  md:p-12 gap-2 relative z-10 -mt-5'>
+        <div className='hidden lg:grid lg:grid-cols-4 md:grid md:grid-cols-2  md:p-12 gap-2 relative z-10 -mt-5'>
           {
               equipes.map((equipe) => (
                   <div key={equipe.id} className='bg-white p-2 shadow-md rounded-md'>

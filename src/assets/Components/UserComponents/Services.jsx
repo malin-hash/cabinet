@@ -53,7 +53,7 @@ export default function Services() {
               <p className='text-sm text-gray-500'>Succession et testament</p>
             </div>
         </div>
-        <div className='p-6 bg-white shadow-xl rounded-lg'>
+        <div className='p-6 bg-white shadow-xl rounded-lg lg:block hidden'>
             <FaHome className='text-4xl text-blue-700 p-2 rounded-full bg-blue-200 mb-3'/>
             <h1 className='text-lg font-semibold mb-3'>Droit Immobilier</h1>
             <p className='text-sm text-gray-500 mb-4'>Achat-Vente, localisation, copropriété, construction, urbanisme</p>
@@ -78,6 +78,27 @@ export default function Services() {
        {
           open && (
             <div className='space-y-3 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mb-4'>
+                <div className='p-6 bg-white shadow-xl rounded-lg lg:hidden block'>
+                <FaHome className='text-4xl text-blue-700 p-2 rounded-full bg-blue-200 mb-3'/>
+                <h1 className='text-lg font-semibold mb-3'>Droit Immobilier</h1>
+                <p className='text-sm text-gray-500 mb-4'>Achat-Vente, localisation, copropriété, construction, urbanisme</p>
+                <div className='flex space-x-2 px-4 mb-3'>
+                  <FaCheck className='text-green-400 text-md'/>
+                  <p className='text-sm text-gray-500'>Transations immobilières</p>
+                </div>
+                <div className='flex space-x-2 px-4 mb-3'>
+                   <FaCheck className='text-green-400 text-md'/>
+                   <p className='text-sm text-gray-500'>Baux commerciaux</p>
+                 </div>
+                 <div className='flex space-x-2 px-4 mb-3'>
+                   <FaCheck className='text-green-400 text-md'/>
+                   <p className='text-sm text-gray-500'>Copropriété</p>
+                 </div>
+                 <div className='flex space-x-2 px-4'>
+                   <FaCheck className='text-green-400 text-md'/>
+                   <p className='text-sm text-gray-500'>Permis de construire</p>
+                 </div>
+            </div>
             <div className='p-6 bg-white shadow-xl rounded-md'>
             <FaGavel className='text-4xl text-blue-700 p-2 rounded-full bg-blue-200 mb-3'/>
             <h1 className='text-lg font-semibold mb-3'>Droit Pénal</h1>

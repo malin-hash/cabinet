@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Element} from "react-scroll"
 import HomePage from '../Components/UserComponents/HomePage'
 import Services from '../Components/UserComponents/Services'
@@ -13,17 +13,24 @@ import Rubon from '../Components/UserComponents/Rubon'
 import Guide from '../Components/UserComponents/Guide'
 import Faq from '../Components/UserComponents/Faq'
 import Rdv from '../Components/UserComponents/Rdv'
-import Contact from '../Components/UserComponents/Contact'
 import Footer from '../Components/UserComponents/Footer'
+import ModalConnexion from '../Components/UserComponents/ModalConnexion'
 
 export default function UserInterface() {
-    // const close = () => setOpen(!open);
+    const [openModal, setOpenModal] = useState(false)
+    const close = () => setOpenModal(!openModal)
   return (
-    <div>
-        <Header/>
+//   className={`${openModal ? " bg-opacity-0" : ""}`}
+    <div >
+        <Header close={close}/>
         {/* All Components from UserComponents */}
         {/* HomePage */}
-        {/* <SideBar close={() => setOpen(!open)}/> */}
+        {/* <SideBar close={close}/> */}
+        {/* {
+            openModal && (
+                <ModalConnexion close={close}/>
+            )
+        } */}
     <section className='md:mt-14 mt-10 '>
         <Element
         name="acceuil"
@@ -78,11 +85,6 @@ export default function UserInterface() {
         name="rdv"
         >
             <Rdv/>
-        </Element>
-        <Element
-        name="contact"
-        >
-            <Contact/>
         </Element>
         <div>
             <Footer/>
