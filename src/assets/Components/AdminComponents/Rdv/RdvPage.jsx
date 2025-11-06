@@ -29,7 +29,13 @@ export default function RdvPage() {
                     <p className='text-xs text-gray-500'>{rd.firstname}</p>
                 </div>
                 <div className='mb-2'>
-                    <p className='text-sm text-green-700'>{rd.date}</p>
+                    <p className='text-sm text-green-700'>
+                    {
+                      new Date(rd.date).toLocaleString("fr-FR", {
+                        dateStyle: "short"
+                      })
+                    }
+                    </p>
                     <p className='text-xs text-yellow-500'>{rd.time}</p>
                 </div>
               </div>

@@ -13,7 +13,7 @@ const closeSidebar = () => setOpenSidebar(!openSidebar)
   return (
     <div className='px-8 flex justify-between bg-blue-600 shadow-sm left-0 top-0 right-0 fixed z-30'>
         <div className='p-2 flex items-center'>
-          <img src="/public/justice.png" alt="" className='md:h-14 md:w-28 sm:h-12 sm:w-20 '/>
+          <img src="/public/justice.png" alt="" className='h-14 w-28  '/>
           <div>
              <p className='text-white sm:text-xs md:sm font-mono'>PABINGUI <span className='text-yellow-600'>&</span> Associés</p>
              <p className='text-white text-xs font-thin text-center -mt-1'>Justise - Défense - Droit</p>

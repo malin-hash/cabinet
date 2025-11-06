@@ -12,7 +12,7 @@ export default function HomePage() {
     {id:4, name:"Nombre documents archivés", number: 1000, color: "pink", avatar:<AiOutlineFolder/>},
   ]
   return (
-    <div className='md:px-8 px-2 py-2 sm:-mt-16 md:mt-16'>
+    <div className='md:px-8 px-2 py-2 -mt-16 md:mt-16'>
       <div className='grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-3 mb-3'>
         {
          infos.map((info) => (

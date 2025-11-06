@@ -4,10 +4,10 @@ import {FaLocationPin } from 'react-icons/fa6'
 
 export default function Footer() {
   return (
-    <div className='bg-black p-10 text-white '>
+    <div className='bg-blue-950 p-10 text-white rounded-t-3xl'>
         <div className='grid md:grid-cols-4 grid-cols-2 gap-5 mb-5'>
             <div className='space-y-4'>
-                <p>Logo</p>
+                <img src="/justice.png" alt="" className='h-16 w-32 '/>
                 <p className='text-xs'>Votre partenaire juridique de confiance pour tous vos besoins légaux</p>
                 <div className='flex space-x-3'>
                     <FaFacebookF className='text-xl hover:text-blue-600 hover:bg-white rounded-full p-1 text-white bg-blue-600 cursor-pointer transition-colors duration-300'/>

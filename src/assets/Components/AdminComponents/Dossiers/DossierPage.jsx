@@ -46,7 +46,7 @@ export default function DossierPage() {
         };
       
   return (
-    <div className='flex lg:flex-row flex-col-reverse gap-3 py-2 px-8 justify-between lg:mt-0 md:mt-0 sm:-mt-16'>
+    <div className='flex lg:flex-row flex-col-reverse gap-3 py-2 px-8 justify-between md:mt-0 -mt-16'>
         <div className='flex-1'>
           <form className='relative flex mb-3' >
             <input type="search" placeholder='Rechercher un dossier ...' className='py-2 px-2 indent-16 border-2 border-black w-full rounded-l-lg'/>

@@ -66,8 +66,8 @@ export default function ClientPage() {
     }
   }
   return (
-    <div className='px-8 py-2 md:mt-0 sm:-mt-12'>
-      <div className='flex justify-between gap-3 md:flex-row sm:flex-col-reverse'>
+    <div className='px-8 py-2 md:mt-0 -mt-12'>
+      <div className='flex justify-between gap-3 md:flex-row flex-col-reverse'>
         <div className='p-6 shadow-xl flex-1'>
           {/* <div className='flex justify-between'>
               <p className='font-bold'>Gestion des client</p>

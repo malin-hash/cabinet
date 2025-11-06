@@ -28,7 +28,7 @@ const [docs, setDocs] = useState([])
   const [open, setOpen] = useState(false)
   const openArchive = () => setOpen(!open)
   return (
-    <div className='flex lg:flex-row sm:flex-col md:flex-row space-x-2 py-2 px-8 justify-between bg-slate-100 sm:-mt-16 md:mt-0 '>
+    <div className='flex lg:flex-row flex-col md:flex-row space-x-2 py-2 px-8 justify-between bg-slate-100 -mt-16 md:mt-0 '>
       {
         open && (
           <ModalArchive openArchive={openArchive} fetchArchive={fetchArchive}/>
@@ -65,7 +65,7 @@ const [docs, setDocs] = useState([])
           ))
         }
       </div>
-      <div className='p-2 w-72 sm:w-full'>
+      <div className='p-2 md:w-72 w-full'>
         <div className='bg-white rounded-lg shadow-xl py-2 px-5 mb-4'>
             <p className='text-sm text-gray-600 mb-2 font-bold'>Statistique</p>
             <div className='p-2 flex justify-between'>

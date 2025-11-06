@@ -17,10 +17,10 @@ export default function Header() {
         <nav className='flex justify-between'>
             {/* Logo */}
         <div className='p-2 flex items-center'>
-          <img src="/justice.png" alt="" className='md:h-14 md:w-28 sm:h-10 sm:w-20'/>
+          <img src="/justice.png" alt="" className='h-14 w-28 '/>
           <div>
-             <p className='text-blue-600 text-sm font-mono'>PABINGUI <span className='text-yellow-600'>&</span> Associés</p>
-             <p className='text-blue-600 text-xs font-thin text-center -mt-1'>Justise - Défense - Droit</p>
+             <p className='text-blue-600 text-sm '>PABINGUI <span className='text-yellow-600'>&</span> Associés</p>
+             <p className='text-blue-600 text-xs  text-center -mt-1'>Justise - Défense - Droit</p>
           </div>
         </div>
             <button onClick={() => setOpen(true)} className='lg:hidden block text-gray-800 p-3 font-bold cursor-pointer hover:text-blue-600'>

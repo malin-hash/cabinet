@@ -51,7 +51,7 @@ const handleSubmit = async (e) => {
    }
 }
   return (
-    <div className='lg:px-36 md:px-16 sm:px-3 sm:-py-20 md:mt-0'>
+    <div className='lg:px-36 md:px-16 px-3 -mt-28 md:mt-0'>
         <div className='p-10 bg-white rounded-lg  top-0 '>
             
             {
@@ -62,7 +62,7 @@ const handleSubmit = async (e) => {
               )
             }
             <form onSubmit={handleSubmit} className='p-4'>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
                   <div>
                     <label htmlFor="" className='text-gray-500'>Nom <span className='text-red-600 text-xl'>*</span></label>
                     <input className={`${name ? "w-full rounded-md mb-2 border-2 border-red-600 p-2": "w-full rounded-md mb-2 border-2 hover:border-blue-600 border-slate-600 p-2"}`} type="text" placeholder="Nom de l'avocat"  onChange={(e) => setFormData({...formData, username: e.target.value})}/>
