@@ -1,153 +1,286 @@
-import React, {useState, useEffect, useRef} from 'react'
-import { AiFillCloseSquare, AiFillFolderOpen, AiOutlineFullscreenExit, AiOutlineSearch, AiTwotoneFilePdf } from 'react-icons/ai'
-import { FiDownload, FiEdit, FiShare2, FiTrash2 } from 'react-icons/fi'
-import { MdMoreHoriz, MdMoreVert, MdStorage } from 'react-icons/md'
-import { getClient, deleteClient } from '../../../../Apis/axios'
+import React, { useState, useEffect } from "react";
+import {
+  AiFillCloseCircle,
+  AiFillEdit,
+  AiOutlineDelete,
+  AiOutlineSearch,
+} from "react-icons/ai";
+import {
+  getClient,
+  getAffaire,
+  getUser,
+  dossier_add,
+  deleteDossier,
+  archive_folder,
+} from "../../../../Apis/axios";
+import AffComponent from "./AffComponent";
+import ClientComponent from "./ClientComponent";
+import AvocatComponent from "./AvocatComponent";
+import TextaRea from "./TextaRea";
+import { FaBoxArchive, FaFolderOpen } from "react-icons/fa6";
+import ModalDelete from "../ModalDelete";
+import ModalUpdate from "../ModalUpdate";
+import axios from "axios";
+import {
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import { toast } from "react-toastify";
+
 export default function DossierPage() {
-    // Config parameter
-    const [parameter, SetParameter] = useState(false)
-    const openParameter = (id) => {
-      SetParameter(parameter === id ? null : id)
+  const [search, setSearch] = useState("");
+  const [dataFolder, setDataFolder] = useState([]);
+
+  const [formData, setFormData] = useState({
+    client_id: "",
+    affaire_id: "",
+    avocat_id: "",
+    description: "",
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await dossier_add(formData);
+      toast.success(res.data.message);
+      fetchData(search);
+      setFormData({
+        client_id: "",
+        affaire_id: "",
+        avocat_id: "",
+        description: "",
+      });
+    } catch (err) {
+      return toast.error(err.response?.data?.message || "Erreur d'ajout");
     }
-    const [size, SetSize] = useState(false)
-    const [name, SetName] = useState(false)
-    const [date, SetDate] = useState(false)
-    const openSize = () => SetSize(!size)
-    const openName = () => SetName(!name)
-    const openDate = () => SetDate(!date)
-    // Close menu
-    const menuRef = useRef(null)
-    useEffect(() => {
-      const click = (event) => {
-        if(menuRef.current && !menuRef.current.contains(event.target)){
-          SetParameter(null)
-        }
-      };
-      document.addEventListener("mousedown", click);
-      return () => document.removeEventListener("mousedown", click)
-    }, [])
-    //  FOlder
-      const [folders, setFolders] = useState([])
-      
-      // Fetch folder
-      const fetchClient = async () => {
-        const res = await getClient()
-        setFolders(res.data)
-      };
-      useEffect(() => {
-        fetchClient()
-      }, [])
-      // Delete folder 
-      const CLientDelete = async (id) => {
-          confirm('voulez-vous Supprimer ce client ?')
-          const res = await deleteClient(id)
-          setMessage(res.data.message || "Client supprimé" );
-          setFolders((prev) => prev.filter((t) => t.id != id ))
-        };
-      
+  };
+  // Client list
+  const [listClients, setListClients] = useState([]);
+  const fetchClient = async () => {
+    try {
+      const res = await getClient();
+      setListClients(res.data);
+    } catch {
+      return null;
+    }
+  };
+
+  // Affaire list
+  const [listAffaire, setListAffaire] = useState([]);
+  const fetchAffaire = async () => {
+    try {
+      const res = await getAffaire();
+      setListAffaire(res.data);
+    } catch {
+      return null;
+    }
+  };
+
+  // Avocat list
+  const [listAvocat, setListAvocat] = useState([]);
+  const fetchAvocat = async () => {
+    try {
+      const res = await getUser();
+      setListAvocat(res.data);
+    } catch {
+      return null;
+    }
+  };
+
+  // Dossier list
+  const fetchData = async (value) => {
+    try {
+      const res = await axios.get("http://localhost:5000/folders/list", {
+        params: { q: value },
+      });
+      setDataFolder(res.data);
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
+  useEffect(() => {
+    fetchData(search);
+  }, [search]);
+  // UseEffect
+  useEffect(() => {
+    fetchAvocat();
+    fetchAffaire();
+    fetchClient();
+  }, []);
+  // Property
+  const [data, setData] = useState(null);
+  const [property, setProperty] = useState(null);
+  const handelProperty = (id) => {
+    setData(id);
+    return setProperty(id);
+  };
+  // Delete folder
+  const deleteFolder = async (id) => {
+    try {
+      const res = await deleteDossier(id);
+      toast.success(res.data.message || "Client supprimé");
+      closeModal();
+      fetchData();
+    } catch {
+      toast.error("Document non supprimé");
+    }
+  };
+  // Archive
+  const archiveFolder = async (id) => {
+    try {
+      const res = await archive_folder(id);
+      toast.success(res.data.message);
+      fetchData();
+    } catch {
+      toast.error("Dossier non archivé");
+    }
+  };
+  // Open Modal
+  const [openModal, setOpenModal] = useState(false);
+  const closeModal = () => {
+    setOpenModal(!openModal);
+    setProperty(null);
+  };
+  const [modalUpdate, setModalUpdate] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState();
+  const close = () => {
+    setModalUpdate(!modalUpdate);
+    fetchData();
+  };
+  const closeModalUpdate = (d) => {
+    setDataUpdate(d);
+    setModalUpdate(!modalUpdate);
+    setProperty(null);
+  };
   return (
-    <div className='flex lg:flex-row flex-col-reverse gap-3 py-2 px-8 justify-between md:mt-0 -mt-16'>
-        <div className='flex-1'>
-          <form className='relative flex mb-3' >
-            <input type="search" placeholder='Rechercher un dossier ...' className='py-2 px-2 indent-16 border-2 border-black w-full rounded-l-lg'/>
-            <button className='p-2 text-white bg-blue-600 rounded-r-lg hover:bg-blue-800 duration-300 transition-colors'>Chercher</button>
-            <AiOutlineSearch className='absolute top-3 left-3 text-2xl'/>
-          </form>
-          <div className='p-2 grid grid-cols-4 gap-2'>
-          {
-            folders.map((folder) => (  
-              <div key={folder.id}>
-                  <div className='rounded-lg shadow-2xl bg-slate-200 flex items-center justify-center p-6 relative'>
-                      <div onClick={() => openParameter(folder.id)} className='absolute right-2 top-2 cursor-pointer'>
-                        {
-                          parameter  === folder.id ? 
-                          (
-                            <AiFillCloseSquare className='text-red-600 hover:text-red-800'/>
-                          ):
-                          <MdMoreVert className='hover:text-blue-600'/>
-                        }
-                      </div>
-                      <AiTwotoneFilePdf className='text-5xl text-red-500'/>
-                      {
-                        parameter === folder.id && (
-                          <div className='bg-white shadow-xl py-4 px-2 absolute right-2 top-8 rounded-md z-10 w-36 '>
-                            <ul className='text-gray-700 text-sm'>
-                                <li className='flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
-                                    <FiEdit className='text-blue-500'/> Modifier
-                                </li>
-                                <li className='flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
-                                    <FiShare2 className='text-green-500'/> Partager
-                                </li>
-                                <li className='flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
-                                    <FiDownload className='text-indigo-500'/> Télécharger
-                                </li>
-                                <li onClick={() => CLientDelete(folder.id)} className='flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer'>
-                                    <FiTrash2 className='text-red-500' /> Supprimer
-                                </li>
-                            </ul>
-                          </div>
-                        )
-                      }
-                  </div>
-                  {
-                    name && (
-                      <p className='text-xs'>dossier de :{folder.name}</p>
-                    )
-                  }
-                  {
-                    date && (
-                      <p className='text-xs'>{folder.dateFolder}</p>
-                    )
-                  }
-                  {
-                    size && (
-                      <p className='text-xs'>{folder.sizeFolder}</p>
-                    )
-                  }
+    <div className="px-8">
+      <p className="text-xl font-bold uppercase text-blue-500 mb-1">
+        Gestion des Dossiers
+      </p>
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-3 justify-between md:mt-0 -mt-16">
+        <div className="flex-1">
+          <TextField
+            label="Rechercher un dossier"
+            placeholder="Rechercher un Dossier ..."
+            type="text"
+            variant="outlined"
+            fullWidth
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <div className="text-gray-600 italic">
+            <div className="mt-2 p-3 bg-gray-100 rounded-md">
+              <p>
+                Créer un nouveau dossier en remplissant le formulaire à droite
+                ➡️
+              </p>
+            </div>
+            {dataFolder == "" ? (
+              <div className="mt-2 p-3 bg-red-400 rounded-md">
+                <p className="text-center text-red-700">
+                  Aucun dossier en cours ...
+                </p>
               </div>
-             ))
-          }
+            ) : (
+              <div className="mt-1 p-3  rounded-md grid grid-cols-3 gap-2">
+                {dataFolder.map((d) => (
+                  <div key={d.id} className="relative p-1 bg-gray-200 rounded">
+                    <FaFolderOpen className="text-8xl text-blue-500 mx-auto" />
+                    <div
+                      onClick={() => handelProperty(d.id)}
+                      className="absolute top-1 right-4 text-blue-600 hover:text-blue-400 cursor-pointer"
+                    >
+                      ▪▪▪
+                    </div>
+                    <p className="text-xs px-4">Nom : {d.client.name}</p>
+                    <p className="text-xs px-4">Date : {d.created_at}</p>
+                    <p className="text-xs px-4">N° : {d.numero_dossier}</p>
+                    {property === d.id && (
+                      <div className="p-2 bg-white rounded absolute top-2 w-40 right-2 shadow-lg">
+                        <AiFillCloseCircle
+                          onClick={() => setProperty(null)}
+                          className="text-red-600 text-xl hover:text-red-800 transition-colors duration-300 cursor-pointer"
+                        />
+                        <div
+                          onClick={() => closeModal()}
+                          className="flex space-x-2 mt-2 p-1 hover:bg-gray-200 rounded-sm transition-colors duration-300 cursor-pointer"
+                        >
+                          <AiOutlineDelete className="text-red-600 text-md mt-0.5 " />
+                          <p className="text-sm">Supprimer</p>
+                        </div>
+                        <div
+                          onClick={() => closeModalUpdate(d)}
+                          className="flex space-x-2 mt-2 p-1 hover:bg-gray-200 rounded-sm transition-colors duration-300 cursor-pointer"
+                        >
+                          <AiFillEdit className="text-green-600 text-md mt-0.5 " />
+                          <p className="text-sm">Modifier</p>
+                        </div>
+                        <div
+                          onClick={() => archiveFolder(d.id)}
+                          className="flex space-x-2 mt-2 p-1 hover:bg-gray-200 rounded-sm transition-colors duration-300 cursor-pointer"
+                        >
+                          <FaBoxArchive className="text-purple-600 text-md mt-0.5 " />
+                          <p className="text-sm">Archiver</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-        <div className='shadow-lg'>
-            <div className='flex-1 p-2 grid grid-cols-2 gap-2 mb-2'>
-              <div className=' shadow-2xl p-2 rounded-lg'>
-                  <p className='text-center font-semibold mb-3 text-sm'>Nombre total des dossiers client</p>
-                  <div className='flex justify-between'>
-                    <div className='p-2 rounded-lg bg-amber-100'>
-                      <AiFillFolderOpen className='text-4xl text-amber-700'/>
-                    </div>
-                    <p className='font-bold text-xl '>20</p>
-                  </div>
+        <div className="shadow-lg mb-4">
+          <form className="space-y-2" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-3">
+              {/* Affaire */}
+              <div className="flex-col gap-2">
+                <AffComponent
+                  affaires={listAffaire}
+                  formData={formData}
+                  setFormData={setFormData}
+                />
               </div>
-              <div className=' shadow-2xl p-2 rounded-lg'>
-                  <p className='text-center font-semibold mb-3 text-sm'>Stockage</p>
-                  <div className='flex justify-between'>
-                    <div className='p-2 rounded-lg bg-amber-100'>
-                      <MdStorage className='text-4xl text-amber-700'/>
-                    </div>
-                    <p className='font-bold text-xl '>20 GO</p>
-                  </div>
-              </div>
-            </div>
-            <p className='text-center font-semibold text-sm'>Parametre d'affichage</p>
-            <div className='grid grid-cols-2 gap-1 text-sm'>
-              <div className='px-3 py-1 flex space-x-2'>
-                  <input onClick={openSize} type="checkbox" className='border-2 border-black w-5 cursor-pointer' />
-                  <label className='font-semibold text-md'>Taille du dossier</label>
-              </div>
-              <div className='px-3 py-1 flex space-x-2'>
-                  <input onClick={openName} type="checkbox" className='border-2 border-black w-5 cursor-pointer' />
-                  <label className='font-semibold text-md'>Nom du dossier</label>
-              </div>
-              <div className='px-3 py-1 flex space-x-2'>
-                  <input onClick={openDate} type="checkbox" className='border-2 border-black w-5 cursor-pointer' />
-                  <label className='font-semibold text-md'>Date creation du dossier</label>
+              {/* Client */}
+              <div className="flex-col gap-2">
+                <ClientComponent
+                  clients={listClients}
+                  formData={formData}
+                  setFormData={setFormData}
+                />
               </div>
             </div>
-            <div>
+            {/* Avocat */}
+            <div className="flex-col gap-2">
+              <AvocatComponent
+                avocats={listAvocat}
+                formData={formData}
+                setFormData={setFormData}
+              />
             </div>
+            <div className="flex flex-col gap-2">
+              <TextaRea formData={formData} setFormData={setFormData} />
+            </div>
+            <button className="text-white bg-blue-600 rounded-md text-center p-3 w-full hover:bg-blue-700 transition-colors duration-300">
+              Enrégistrer
+            </button>
+          </form>
         </div>
+        {openModal && (
+          <ModalDelete
+            closeModal={closeModal}
+            data={data}
+            deleteFolder={deleteFolder}
+            fetchDossier={fetchData}
+          />
+        )}
+        {modalUpdate && (
+          <ModalUpdate dataUpdate={dataUpdate} close={() => close()} />
+        )}
+      </div>
     </div>
-  )
+  );
 }

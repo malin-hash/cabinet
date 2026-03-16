@@ -1,174 +1,338 @@
-import React, {useEffect, useState} from 'react'
-import {AiOutlineUserAdd, AiOutlineUserDelete, AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai'
-import { FaDeleteLeft } from 'react-icons/fa6'
-import { FaEdit} from 'react-icons/fa'
-import { client, getClient, deleteClient } from '../../../../Apis/axios'
+import React, { useEffect, useState } from "react";
+import {
+  AiFillCloseCircle,
+  AiFillDelete,
+  AiFillEdit,
+  AiOutlineEdit,
+} from "react-icons/ai";
+import { FaEdit } from "react-icons/fa";
+import {
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import { client_add, deleteClient, updateClient } from "../../../../Apis/axios";
+import axios from "axios";
+import ModalDelete from "../ModalDelete";
+import { toast } from "react-toastify";
 
 export default function ClientPage() {
-  // const [newClient, setNewClient] = useState(false)
-  // const openClient = () => setNewClient(!newClient)
-  const [message, setMessage] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [name, setName] = useState("")
-  const [firstname, setFirstname] = useState("")
-  const [nationality, setNationality] = useState("")
-  const [sex, setSex] = useState("")
-  const [address, setAddress] = useState("")
-  const [fichier, setFichier] = useState(null)
-  const [clients, setClients] = useState([])
-  
-  // Fetch client
-  const fetchClient = async () => {
-    const res = await getClient()
-    setClients(res.data)
+  const [search, setSearch] = useState("");
+  const [data, setData] = useState([]);
+
+  // Appel API recherche et affichage des Clients
+  const fetchData = async (value) => {
+    try {
+      const res = await axios.get("http://localhost:5000/client/search", {
+        params: { q: value },
+      });
+      setData(res.data);
+    } catch (error) {
+      toast.error(error.response.data);
+    }
   };
   useEffect(() => {
-    fetchClient()
-  }, [])
-  
-  // Delete client
-  
-  const CLientDelete = async (id) => {
-    window.confirm('voulez-vous Supprimer ce client ?')
-    const res = await deleteClient(id)
-    setMessage(res.data.message || "Client supprimé" );
-    return setClients((prev) => prev.filter((t) => t.id != id ))
+    fetchData(search);
+  }, [search]);
+
+  // const [message, setMessage] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    firstname: "",
+    email: "",
+    phoneNumber: "",
+    genre: "",
+    address: "",
+    nationality: "",
+    profession: "",
+  });
+
+  // Quand on click sur modifier pré-remplir le formulaire
+  const handleEdit = (user) => {
+    setEditing(user.id);
+    setFormData({
+      name: user.name,
+      firstname: user.firstname,
+      phoneNumber: user.phoneNumber,
+      genre: user.genre,
+      email: user.email,
+      address: user.address,
+      nationality: user.nationality,
+      profession: user.profession,
+    });
   };
 
-  
-  // Submit client
+  // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
-    
-    const formData = new FormData()
-    formData.append("name", name)
-    formData.append("firstname", firstname)
-    formData.append("nationality", nationality)
-    formData.append("sex", sex)
-    formData.append("address", address)
-    formData.append("fichier", fichier)
-     
-    try {
-      const res = await client(formData)
-      setMessage(res.data.message);
-      setName("")
-      setFirstname("")
-      setNationality("")
-      setAddress("")
-      setSex("")
-      setFichier([])
-      await fetchClient()
-    }catch (err) {
-      setMessage(err.response?.data?.message || "Erreur de connexion")
-    }finally{
-      setLoading(false)
+    setLoading(true);
+    if (editing) {
+      try {
+        const res = await updateClient(editing, formData);
+        toast.success(res.data.message || "Client modifié avec succès");
+        fetchData(search);
+      } catch (err) {
+        setLoading(false);
+        return toast.error(err.response?.data?.message || "Erreur d'ajout");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try {
+        const res = await client_add(formData);
+        toast.success(res.message || "Client ajouté avec succès");
+        fetchData(search);
+      } catch (err) {
+        setLoading(false);
+        return toast.error(err.response?.data?.message || "Erreur d'ajout");
+      } finally {
+        setLoading(false);
+      }
     }
-  }
+    setFormData({
+      name: "",
+      firstname: "",
+      email: "",
+      phoneNumber: "",
+      genre: "",
+      address: "",
+      nationality: "",
+      profession: "",
+    });
+    setEditing(null);
+    fetchData(search);
+    setLoading(false);
+  };
+
+  // Suppression du client
+  const CLientDelete = async (id) => {
+    const res = await deleteClient(id);
+    fetchData(search);
+    setFormData({
+      name: "",
+      firstname: "",
+      email: "",
+      phoneNumber: "",
+      genre: "",
+      address: "",
+      nationality: "",
+      profession: "",
+    });
+    setOpenModal(false);
+    toast.success(res.data.message || "Client supprimé");
+    fetchData(search);
+    return setData((prev) => prev.filter((t) => t.id != id));
+  };
+
+  const [openModal, setOpenModal] = useState(false);
+  const [dataId, setDataId] = useState(null);
+  const closeModal = (id) => {
+    setOpenModal(!openModal);
+    setDataId(id);
+  };
+
   return (
-    <div className='px-8 py-2 md:mt-0 -mt-12'>
-      <div className='flex justify-between gap-3 md:flex-row flex-col-reverse'>
-        <div className='p-6 shadow-xl flex-1'>
-          {/* <div className='flex justify-between'>
-              <p className='font-bold'>Gestion des client</p>
-              <button onClick={openClient} className='p-2 text-sm rounded-lg text-white bg-blue-600  hover:bg-blue-800 duration-300 transition-colors'>
-                {
-                  newClient ?
-                  (
-                    <p>Revenir sur les détails</p>
-                  ):
-                  <p className='flex'>
-                     <AiOutlineUserAdd className='text-xl'/>
-                     <p>Nouveau Client</p>
-                  </p>
-                }
-               
-              </button>
-          </div> */}
+    <div className="md:px-6 px-3 -py-6 md:mt-0 -mt-10 ">
+      <p className="text-xl font-bold uppercase text-blue-500 mb-1">
+        Gestion des Clients
+      </p>
+      <div className="grid gap-2 md:grid-cols-2 grid-cols-1">
+        <div className="shadow-xl flex-1">
+          <TextField
+            label="Rechercher un Client"
+            placeholder="Rechercher un Client ..."
+            type="text"
+            variant="outlined"
+            fullWidth
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
           <div>
-          
-            <table className='w-full border-collapse mt-2 text-sm'>
+            <table className="w-full border-collapse mt-2 text-sm">
               <thead>
-                  <tr className='bg-gray-100 text-left text-gray-600'>
-                    <th className='py-2 px-3'>Nom</th>
-                    <th className='py-2 px-3'>Prénom</th>
-                    <th className='py-2 px-3'>Adresse</th>
-                    <th className='py-2 px-3'>Action</th>
-                  </tr>
+                <tr className="bg-gray-100 text-left text-gray-600 border-2">
+                  <th className="py-2 px-3 border-2">Nom</th>
+                  <th className="py-2 px-3 border-2">Prénom</th>
+                  <th className="py-2 px-3 border-2">Adresse</th>
+                  <th className="py-2 px-3 border-2">Action</th>
+                </tr>
               </thead>
               <tbody>
-                    {
-                      clients.map((clt) => (
-                    <tr key={clt.id}>
-                        <td className='p-3 font-medium text-gray-800'>{clt.name}</td>
-                        <td className='p-3 font-medium text-gray-800'>{clt.firstname}</td>
-                        <td className='p-3 font-medium text-gray-800'>{clt.address}</td>
-                        <td className='px-3 py-4 font-medium text-gray-800 flex space-x-3'>
-                          <AiOutlineUserDelete onClick={() => deleteClient(clt.id)} className='text-red-600 text-lg cursor-pointer hover:text-red-800 duration-300 transition-colors'/>
-                          <FaEdit className='text-green-600 text-lg cursor-pointer hover:text-green-800 duration-300 transition-colors'/>
-                        </td>
-                    </tr>
-                      ))
-                    }
+                {data.map((clt) => (
+                  <tr key={clt.id}>
+                    <td className="p-3 font-medium text-gray-800 border-r-2 border-l-2">
+                      {clt.name}
+                    </td>
+                    <td className="p-3 font-medium text-gray-800 border-r-2 border-l-2">
+                      {clt.firstname}
+                    </td>
+                    <td className="p-3 font-medium text-gray-800 border-r-2 border-l-2">
+                      {clt.address}
+                    </td>
+                    <td className="font-medium flex mt-1 p-1  ">
+                      <AiFillDelete
+                        onClick={() => closeModal(clt.id)}
+                        className="text-red-700 hover:bg-red-500 bg-red-400 rounded-l-md p-2 flex-1 text-3xl cursor-pointer  duration-300 transition-colors"
+                      />
+                      <AiOutlineEdit
+                        onClick={() => handleEdit(clt)}
+                        className="text-green-700 hover:bg-green-500 bg-green-400 rounded-r-md p-2 flex-1 text-3xl cursor-pointer  duration-300 transition-colors"
+                      />
+                    </td>
+                  </tr>
+                ))}
+                {data.length == 0 && (
+                  <div className="mt-5">
+                    <p className="text-red-500 text-xl text-center">
+                      Aucun client trouvé ...
+                    </p>
+                  </div>
+                )}
               </tbody>
             </table>
           </div>
         </div>
-        {/* {
-          newClient ? 
-          (  */}
-            <div className='p-2'>
-              <h1 className='text-md text-center font-bold mb-2'>Ajouter un client</h1>
-              {
-              message && (
-                 <div className='text-center bg-green-100 p-4 rounded-md mb-3'>
-                    <p className='text-green-600'>{message} 👨</p>
-                 </div>
-              )
-            }
-              <form onSubmit={handleSubmit} >
-                <div className='grid grid-cols-2 gap-2 mb-2'>
-                  <input type="text" value={name}  placeholder='Votre Nom' className='border-2 border-black hover:border-blue-700 w-full rounded-lg p-2' onChange={(e) => setName(e.target.value)}/>
-                  <input type="text" value={firstname}  placeholder='Votre Pénom' className='border-2 border-black hover:border-blue-700 w-full rounded-lg p-2' onChange={(e) => setFirstname(e.target.value)}/>
-                </div>
-                <div className='grid grid-cols-2 gap-2 mb-2'>
-                  <input type="text" value={nationality} placeholder='Votre Nationalité' className='border-2 border-black hover:border-blue-700 w-full rounded-lg p-2' onChange={(e) => setNationality(e.target.value)}/>
-                  <select type="text" value={sex} placeholder='Votre sexe' className='border-2 border-black hover:border-blue-700 w-full rounded-lg p-2'  onChange={(e) => setSex(e.target.value)}>
-                    <option  className='text-gray-500'>Votre Sexe</option>
-                    <option  className='text-gray-500' value="masculin">Masculin</option>
-                    <option  className='text-gray-500' value="feminin">Feminin</option>
-                  </select>
-                </div>
-                  <input type="text" value={address} placeholder='Votre adresse' className='border-2 mb-2 border-black hover:border-blue-700 w-full rounded-lg p-2' onChange={(e) => setAddress(e.target.value)}/>
-                  <input accept=".jpg, .jpeg, .png, .docx, .pdf" type="file"  placeholder='Votre dossier' className='border-2 mb-2 border-black hover:border-blue-700 w-full rounded-lg p-5' onChange={(e) => setFichier(e.target.files[0])}/>
-                  <div className='flex justify-center'>
-                    <button className='p-3 rounded-lg text-white bg-blue-600 hover:bg-blue-800'>{loading ? 'Chargement ...': 'Ajouter le Client'}</button>
-                  </div>
-              </form>
+        <div className="p-2">
+          <h1 className="text-md text-center font-bold mb-2">
+            {editing ? "Modifier un client" : "Ajouter un client"}
+          </h1>
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <TextField
+                label="Nom du client"
+                placeholder="Exemple: Jean ..."
+                multiline
+                variant="outlined"
+                fullWidth
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+              />
+              <TextField
+                label="Prénom du client"
+                placeholder="Exemple: Paul ..."
+                multiline
+                variant="outlined"
+                fullWidth
+                value={formData.firstname}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstname: e.target.value })
+                }
+              />
             </div>
-          {/* ): */}
-        {/* <div className='p-2  flex justify-between gap-3 h-32'> */}
-          {/* <div className=' shadow-xl p-4 rounded-lg'> */}
-            {/* <p className='text-center font-semibold mb-3'>Nombre de client satisfait</p> */}
-            {/* <div className='flex justify-between'> */}
-              {/* <div className='p-4 rounded-lg bg-green-300'> */}
-                {/* <AiOutlineUsergroupAdd className='text-xl text-green-700'/> */}
-              {/* </div> */}
-              {/* <p className='font-extrabold text-2xl '>234</p> */}
-            {/* </div> */}
-          {/* </div> */}
-          {/* <div className=' shadow-xl p-4 rounded-lg'> */}
-            {/* <p className='text-center font-semibold mb-3'>Nombre de client insatisfait</p> */}
-            {/* <div className='flex justify-between'> */}
-              {/* <div className='p-4 rounded-lg bg-red-300'> */}
-                {/* <AiOutlineUsergroupDelete className='text-xl text-red-600'/> */}
-              {/* </div> */}
-              {/* <p className='font-extrabold text-2xl '>20</p> */}
-            {/* </div> */}
-          {/* </div> */}
-        {/* </div>  */}
-        {/* } */}
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <FormControl fullWidth>
+                <InputLabel>Sexe</InputLabel>
+                <Select
+                  value={formData.genre}
+                  label="Sexe"
+                  onChange={(e) =>
+                    setFormData({ ...formData, genre: e.target.value })
+                  }
+                >
+                  <MenuItem value="Masculin">Masculin</MenuItem>
+                  <MenuItem value="Feminin">Feminin</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel>Nationalité</InputLabel>
+                <Select
+                  value={formData.nationality}
+                  label="Nationalité"
+                  onChange={(e) =>
+                    setFormData({ ...formData, nationality: e.target.value })
+                  }
+                >
+                  <MenuItem value="Française">Française</MenuItem>
+                  <MenuItem value="Centrafriaine">Centrafriaine</MenuItem>
+                  <MenuItem value="Congolaise">Congolaise</MenuItem>
+                  <MenuItem value="Ivoirienne">Ivoirienne</MenuItem>
+                  <MenuItem value="Camerounaise">Camerounaise</MenuItem>
+                  <MenuItem value="Tchadienne">Tchadienne</MenuItem>
+                  <MenuItem value="Gabonaise">Gabonaise</MenuItem>
+                  <MenuItem value="Egyptienne">Egyptienne</MenuItem>
+                  <MenuItem value="Chinoise">Chinoise</MenuItem>
+                  <MenuItem value="Americaine">Americaine</MenuItem>
+                  <MenuItem value="Japonaise">Japonaise</MenuItem>
+                  <MenuItem value="Angolaise">Angolaise</MenuItem>
+                  <MenuItem value="Portugaise">Portugaise</MenuItem>
+                  <MenuItem value="Belge">Belge</MenuItem>
+                  <MenuItem value="Espagnle">Espagnle</MenuItem>
+                  <MenuItem value="Saoudienne">Saoudienne</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <TextField
+                label="Adresse du client"
+                placeholder="Exemple: Avenu D.Dacko"
+                multiline
+                variant="outlined"
+                fullWidth
+                value={formData.address}
+                onChange={(e) =>
+                  setFormData({ ...formData, address: e.target.value })
+                }
+              />
+              <TextField
+                label="Profession du client"
+                placeholder="Exemple: Avocat d'affaire"
+                multiline
+                variant="outlined"
+                fullWidth
+                value={formData.profession}
+                onChange={(e) =>
+                  setFormData({ ...formData, profession: e.target.value })
+                }
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <TextField
+                label="Email du client"
+                placeholder="Exemple: client@gmail.com"
+                type="email"
+                variant="outlined"
+                fullWidth
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
+              <TextField
+                label="Numéro du client"
+                placeholder="Exemple: 74427249"
+                type="number"
+                variant="outlined"
+                fullWidth
+                value={formData.phoneNumber || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, phoneNumber: e.target.value })
+                }
+              />
+            </div>
+            <div className="flex justify-center">
+              <button className="p-3 w-full rounded-lg text-white bg-blue-600 hover:bg-blue-800">
+                {loading
+                  ? "Chargement ..."
+                  : `${editing ? "Modifier" : "Ajouter"}`}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
+      {openModal && (
+        <ModalDelete
+          closeModal={closeModal}
+          data={dataId}
+          deleteFolder={CLientDelete}
+        />
+      )}
     </div>
-  )
+  );
 }

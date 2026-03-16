@@ -1,7 +1,8 @@
 import React from 'react'
-import { isAuthenticated } from '../../Utils/Auth'
 import { Navigate } from 'react-router-dom'
 
-export default function ProtectedRoute({element}) {
-  return isAuthenticated() ? element : <Navigate to="/" replace/>
+export default function ProtectedRoute({children}) {
+  const token = localStorage.getItem("token");
+  if(!token) return <Navigate to="/" replace />
+  return children;
 }

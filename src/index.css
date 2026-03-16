@@ -10,3 +10,24 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+@media print {
+    header,
+    footer,
+    head,
+    body * {
+        visibility: hidden;
+    }
+    
+    #print-section,
+    #print-section * {
+        visibility: visible;
+    }
+    
+    #print-section{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}
