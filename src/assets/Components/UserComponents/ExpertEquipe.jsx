@@ -28,7 +28,7 @@ export default function ExpertEquipe() {
     },
     {
       id: 2,
-      name: "Maitre IGARA IGARA Chanel",
+      name: "Maitre IGARA Chanel",
       funtion: "Associé collaborateur",
       experience: "6 ans d'expérience",
       content: "Diplomé de l'université de bangui.",
